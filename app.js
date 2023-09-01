@@ -1,6 +1,6 @@
 const express = require("express");
 const userRouters = require('./routes/user')
-const initDB = require('./database/conection')
+const initDB = require('./database/connection')
 
 const app = express();
 const port = 3008;
