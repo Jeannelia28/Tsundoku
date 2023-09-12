@@ -11,7 +11,7 @@ const db_uri = `mongodb+srv://${username}:${password}@${cluster}/${dbname}?retry
 
 
 //funcion que sera usada para la conexion 
-module.exports = () => {
+module.exports = async () => {
     //funcion asincrona que sera utilizada para la conexion 
     const connect = async () => {
         // manejo de errores
@@ -31,5 +31,5 @@ module.exports = () => {
         }
     }
     //llamada de la funcion de conexion 
-    connect();
+   await connect();
 }
