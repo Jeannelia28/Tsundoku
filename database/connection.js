@@ -1,26 +1,35 @@
+// importamos la libreria de mongoose para la conexion
 const mongoose = require('mongoose')
 
-const db_uri = 'mongodb+srv://neli:admin123@cluster0.fzzzphs.mongodb.net/'
+// constantes que se utilizaran para la cadena de conexion 
+const username = "neli";
+const password = "admin123";
+const cluster = "cluster0.fzzzphs.mongodb.net";
+const dbname = "Tsundoku";
+//definicion de la cadena de conexion
+const db_uri = `mongodb+srv://${username}:${password}@${cluster}/${dbname}?retryWrites=true&w=majority`
 
+
+//funcion que sera usada para la conexion 
 module.exports = () => {
-    const connect = () => {
-        mongoose.connect(
-            db_uri,
-            {
-                keepAlive: true,
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            },
-            (err) => {
-                if(err){
-                    console.log('DB: ERROR!!');
-                }else{
-                    console.log('Conexion Correcta')
+    //funcion asincrona que sera utilizada para la conexion 
+    const connect = async () => {
+        // manejo de errores
+        try{
+            mongoose.set('strictQuery', true);
+            mongoose.connect(
+                db_uri,
+                {
+                    keepAlive: true,
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true
                 }
-            }
-        )
-        
+            )
+            console.log('Connected to data base');
+        }catch(error){
+            console.error(error);
+        }
     }
-
+    //llamada de la funcion de conexion 
     connect();
 }
