@@ -10,26 +10,23 @@ const dbname = "Tsundoku";
 const db_uri = `mongodb+srv://${username}:${password}@${cluster}/${dbname}?retryWrites=true&w=majority`
 
 
-//funcion que sera usada para la conexion 
-module.exports = async () => {
-    //funcion asincrona que sera utilizada para la conexion 
-    const connect = async () => {
-        // manejo de errores
-        try{
-            mongoose.set('strictQuery', true);
-            mongoose.connect(
-                db_uri,
-                {
-                    keepAlive: true,
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true
-                }
-            )
-            console.log('Connected to data base');
-        }catch(error){
-            console.error(error);
-        }
+//funcion asincrona que sera utilizada para la conexion 
+const connect = async () => {
+    // manejo de errores
+    try {
+        mongoose.set('strictQuery', true);
+        mongoose.connect(
+            db_uri,
+            {
+                keepAlive: true,
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+        )
+        console.log('Connected to data base');
+    } catch (error) {
+        console.error(error);
     }
-    //llamada de la funcion de conexion 
-   await connect();
 }
+
+module.exports = connect;

@@ -1,11 +1,17 @@
+require('dotenv').config();
 const express = require('express');
-const port = 3008;
+const dbConnection = require('../database/connection')
+
+const port = process.env.port;
 class Server {
 
     constructor() {
         this.app  = express();
         this.port = port;
         this.usuariosPath = '/users';
+
+        //Conectar a DB
+        this.conectarDB();
 
         // Middlewares
         this.middlewares();
@@ -24,8 +30,12 @@ class Server {
 
     }
 
+    async conectarDB() {
+        await dbConnection();
+    }
+
     routes() {
-        this.app.use(this.usuariosPath, require('../src/routes/user'));
+        this.app.use(this.usuariosPath, require('../models/user'));
     }
 
     listen() {
