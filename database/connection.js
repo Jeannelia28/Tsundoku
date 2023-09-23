@@ -11,22 +11,19 @@ const db_uri = `mongodb+srv://${username}:${password}@${cluster}/${dbname}?retry
 
 
 //funcion asincrona que sera utilizada para la conexion 
-const connect = async () => {
+const dbConnection = async () => {
     // manejo de errores
     try {
-        mongoose.set('strictQuery', true);
-        mongoose.connect(
-            db_uri,
-            {
-                keepAlive: true,
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            }
-        )
+        mongoose.set('strictQuery', true)
+        await mongoose.connect(db_uri, {
+            keepAlive: true,
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
         console.log('Connected to data base');
     } catch (error) {
         console.error(error);
     }
 }
 
-module.exports = connect;
+module.exports = dbConnection;
