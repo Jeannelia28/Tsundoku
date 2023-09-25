@@ -29,12 +29,11 @@ const login = async (req, res = response) => {
         }
 
         // Generar el JWT
-        const token = jwt.sign({
-            id: usuario.id
-        }, process.env.SECRET_KEY)
+        const token = jwt.sign({ id: usuario.id }, process.env.SECRET_KEY, {
+            expiresIn: '24h'
+        })
 
         res.json({
-            usuario,
             token
         })
 
