@@ -11,7 +11,8 @@ class Server {
         this.port = port;
         this.usuariosPath = '/users';
         this.loginPath = '/login';
-        this.obrasPath = '/crear/obra';
+        this.logoutPath = '/logout';
+        this.obrasPath = '/crearObra';
 
         //Conectar a DB
         this.conectarDB();
@@ -41,7 +42,8 @@ class Server {
     routes() {
         this.app.use(this.usuariosPath, require('../routes/user'));
         this.app.use(this.loginPath, require('../routes/auth'));
-        this.app.use(this.obrasPath, require('../routes/obra'))
+        this.app.use(this.obrasPath, require('../routes/obra'));
+        this.app.use(this.logoutPath, require('../routes/auth'));
     }
 
     listen() {

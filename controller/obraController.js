@@ -1,25 +1,29 @@
 const { response } = require('express');
-
+const Generos = require('../models/librosModels/generosLibrosModel');
 const Obra = require('../models/librosModels/obraModel')
 const { validationResult } = require('express-validator')
 
-const { validarJWT } = require('../middlewares/validar-jwt');
-
-const Usuario = require('../models/user');
+const Sesiones = require('../models/user_sessions');
+const { default: mongoose } = require('mongoose');
 
 const CreateObra = async (req, res = response) => {
 
+    //captura el token de la peticion
+    const tokenValue = req.token;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(errors);
     }
 
-    const usuario = await Usuario.findById(uid);
+    //verifica que la sesion se valida
+    const sesion = await Sesiones.findOne({ tokenValue });
 
-    const { title, category, description, author } = req.body;
-    const obra = new Obra({ title, category, description, author: usuario.uid });
+    const { title, category, description } = req.body;
+    const obra = new Obra({ title, category, description, author: sesion.user });
 
-    const existeCategory = await Obra.findOne({ category });
+    const genero = mongoose.model('Generos', Generos.GeneroLibrosSchema, 'dca_generos_libros');
+
+    const existeCategory = await genero.findOne({ category });
     if (!existeCategory) {
         return res.status(412).json({
             msg: 'La categoria seleccionada no existe'

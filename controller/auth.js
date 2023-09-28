@@ -4,11 +4,15 @@ const bcryptjs = require('bcrypt')
 const jwt = require('jsonwebtoken');
 
 const Usuario = require('../models/user');
+const Sesiones = require('../models/user_sessions');
+const { default: mongoose } = require('mongoose');
 
 
+// Controllador para el inicio de sesion
 const login = async (req, res = response) => {
 
     const { email, password } = req.body;
+    const date = new Date();
 
     try {
 
@@ -33,6 +37,10 @@ const login = async (req, res = response) => {
             expiresIn: '24h'
         })
 
+        const sesion = new Sesiones({ user: usuario.id, tokenValue: token, expiration: date.getTime() + (24 * 60 * 60 * 1000) });
+
+        await sesion.save();
+
         res.json({
             token
         })
@@ -46,4 +54,35 @@ const login = async (req, res = response) => {
 
 }
 
-module.exports = { login }
+const logout = async (req, res = response) => {
+    const token = req.token;
+
+    // Verifica si el token está presente en la solicitud
+    if (!token) {
+        return res.status(401).json({
+            msg: 'Su sesión no es válida'
+        });
+    }
+
+    try {
+        // Verifica si existe una sesión asociada al token
+        const sesion = await Sesiones.findOne({ token });
+
+        if (!sesion) {
+            return res.status(401).json({
+                msg: 'Su sesión no es válida'
+            });
+        }
+
+        // Actualiza el campo 'logout' en la sesión
+        sesion.logout = true;
+        await sesion.save();
+
+        res.json({ message: 'Sesión cerrada exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al cerrar sesión' });
+    }
+}
+
+module.exports = { login, logout }
