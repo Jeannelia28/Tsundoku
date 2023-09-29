@@ -13,6 +13,7 @@ class Server {
         this.loginPath = '/login';
         this.logoutPath = '/logout';
         this.obrasPath = '/crearObra';
+        this.capsPath = '/crearCapitulo';
 
         //Conectar a DB
         this.conectarDB();
@@ -44,6 +45,7 @@ class Server {
         this.app.use(this.loginPath, require('../routes/auth'));
         this.app.use(this.obrasPath, require('../routes/obra'));
         this.app.use(this.logoutPath, require('../routes/auth'));
+        this.app.use(this.capsPath, require('../routes/capitulo'));
     }
 
     listen() {

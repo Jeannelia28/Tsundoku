@@ -6,6 +6,8 @@ const { validationResult } = require('express-validator')
 const Sesiones = require('../models/user_sessions');
 const { default: mongoose } = require('mongoose');
 
+let obraID;
+
 const CreateObra = async (req, res = response) => {
 
     //captura el token de la peticion
@@ -32,10 +34,12 @@ const CreateObra = async (req, res = response) => {
 
     await obra.save();
 
+    const obraID = obra._id;
+
     res.json({
         msg: 'Obra registrada exitosamente'
     });
 
 }
 
-module.exports = { CreateObra };
+module.exports = { CreateObra, obraID };
