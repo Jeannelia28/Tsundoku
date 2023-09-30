@@ -9,6 +9,7 @@ const { CreateCapitulo } = require('../controller/capsController')
 const router = Router();
 
 router.post('/', validarJWT, [
+    check('obraID', 'Debe indicar a la obra a la que pertenece'),
     check('title', 'El titulo es obligatorio').not().isEmpty(),
     validarCampos
 ], CreateCapitulo)

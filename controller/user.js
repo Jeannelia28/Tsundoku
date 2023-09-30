@@ -34,7 +34,7 @@ const usuariosPost = async (req, res = response) => {
     await usuario.save();
 
     res.json({
-        usuario
+        message: 'Se ha creado su usuario'
     });
 }
 

@@ -3,25 +3,26 @@ const Generos = require('../models/librosModels/generosLibrosModel');
 const Obra = require('../models/librosModels/obraModel')
 const { validationResult } = require('express-validator')
 
-const Sesiones = require('../models/user_sessions');
+const Usuario = require('../models/user');
 const { default: mongoose } = require('mongoose');
-
-let obraID;
 
 const CreateObra = async (req, res = response) => {
 
-    //captura el token de la peticion
-    const tokenValue = req.token;
+    //captura el usario de la peticion
+    const user = req.user;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(errors);
     }
 
-    //verifica que la sesion se valida
-    const sesion = await Sesiones.findOne({ tokenValue });
+    Usuario.findById(user.id, (error) => {
+        if (error) {
+            console.error(error);
+        }
+    });
 
     const { title, category, description } = req.body;
-    const obra = new Obra({ title, category, description, author: sesion.user });
+    const obra = new Obra({ title, category, description, author: user.id });
 
     const genero = mongoose.model('Generos', Generos.GeneroLibrosSchema, 'dca_generos_libros');
 
@@ -34,12 +35,10 @@ const CreateObra = async (req, res = response) => {
 
     await obra.save();
 
-    const obraID = obra._id;
-
     res.json({
         msg: 'Obra registrada exitosamente'
     });
 
 }
 
-module.exports = { CreateObra, obraID };
+module.exports = { CreateObra };

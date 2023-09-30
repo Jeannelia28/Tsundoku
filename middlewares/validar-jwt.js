@@ -1,11 +1,9 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const { response, request } = require('express')
-
-const Usuario = require('../models/user');
+const Sesiones = require('../models/user_sessions');
 
 
-const validarJWT = (req, res, next) => {
+const validarJWT = async (req, res, next) => {
     // Obtener el token del encabezado de la solicitud
     const token = req.headers.authorization;
     // console.log(req.rawHeaders);
@@ -26,6 +24,11 @@ const validarJWT = (req, res, next) => {
 
         if (expDate <= Date.now()) {
             return res.status(401).json({ message: 'Inicie sesión nuevamente' });
+        }
+
+        const sesion = await Sesiones.findOne({ tokenValue });
+        if (!sesion) {
+            res.status(401).json({ message: 'Su sesion no es valida' });
         }
 
         // Almacenar la información del usuario en req.user

@@ -1,17 +1,13 @@
 const { Schema, model } = require('mongoose');
 
 const CaptitulosSchema = Schema({
-    bookOrigin: {
+    obraID: {
         type: String,
         required: true
     },
     title: {
         type: String,
         required: [true, 'El capitulo debe contener el titulo']
-    },
-    contenido: {
-        type: String,
-        required: true
     },
     author: {
         type: String,
